@@ -1,8 +1,19 @@
+import { useRef } from 'react'
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { Eyebrow } from '@/components/Eyebrow'
 import { Reveal } from '@/components/Reveal'
 import quemSomosLago from '@/assets/quem-somos-lago.jpg'
 
 export function QuemSomos() {
+  const quadro = useRef<HTMLDivElement>(null)
+  const reduceMotion = useReducedMotion()
+
+  const { scrollYProgress } = useScroll({
+    target: quadro,
+    offset: ['start end', 'end start'],
+  })
+  const deriva = useTransform(scrollYProgress, [0, 1], ['-6%', '6%'])
+
   return (
     <section id="quem-somos" className="scroll-mt-24 pb-24 pt-16 md:pb-32 md:pt-20">
       <div className="container grid items-start gap-x-16 gap-y-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
@@ -35,12 +46,19 @@ export function QuemSomos() {
 
         <Reveal delay={0.15} className="lg:pt-4">
           <figure>
-            <img
-              src={quemSomosLago}
-              alt="Lago cercado por palmeiras e gramado em área rural da Via França."
-              className="aspect-square w-full object-cover"
-              loading="lazy"
-            />
+            <div ref={quadro} className="relative aspect-[4/5] overflow-hidden bg-paper">
+              <motion.div
+                className="absolute inset-x-0 top-[-7%] h-[114%]"
+                style={reduceMotion ? undefined : { y: deriva }}
+              >
+                <img
+                  src={quemSomosLago}
+                  alt="Lago cercado por palmeiras e gramado em área rural da Via França."
+                  className="size-full object-cover"
+                  loading="lazy"
+                />
+              </motion.div>
+            </div>
             <figcaption className="mt-3 font-sans text-[0.6875rem] uppercase tracking-[0.16em] text-neutral">
               Loteamentos e condomínios rurais e residenciais
             </figcaption>

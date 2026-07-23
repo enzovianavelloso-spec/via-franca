@@ -1,3 +1,5 @@
+import { useRef } from 'react'
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { Eyebrow } from '@/components/Eyebrow'
 import { Reveal } from '@/components/Reveal'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -24,15 +26,30 @@ function LinhaDeDado({ rotulo, valor }: { rotulo: string; valor: string }) {
 }
 
 function Card({ item }: { item: Empreendimento }) {
+  const quadro = useRef<HTMLDivElement>(null)
+  const reduceMotion = useReducedMotion()
+
+  // A foto deriva devagar dentro do próprio quadro — a grade respira sem se mexer.
+  const { scrollYProgress } = useScroll({
+    target: quadro,
+    offset: ['start end', 'end start'],
+  })
+  const deriva = useTransform(scrollYProgress, [0, 1], ['-5%', '5%'])
+
   return (
     <article className="group flex flex-col">
-      <div className="overflow-hidden bg-paper">
-        <img
-          src={item.imagem}
-          alt={item.alt}
-          className="aspect-[3/2] w-full object-cover transition-transform ease-out [transition-duration:900ms] will-change-transform group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-          loading="lazy"
-        />
+      <div ref={quadro} className="relative aspect-[3/2] overflow-hidden bg-paper">
+        <motion.div
+          className="absolute inset-x-0 top-[-6%] h-[112%]"
+          style={reduceMotion ? undefined : { y: deriva }}
+        >
+          <img
+            src={item.imagem}
+            alt={item.alt}
+            className="size-full object-cover transition-transform ease-out [transition-duration:900ms] will-change-transform group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+            loading="lazy"
+          />
+        </motion.div>
       </div>
 
       <h3 className="mt-6 font-display text-[1.625rem] font-normal leading-tight tracking-[-0.01em] text-ink">
