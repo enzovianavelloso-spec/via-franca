@@ -108,9 +108,14 @@ export function Empreendimentos() {
 
           {STATUS.map((status) => (
             <TabsContent key={status.id} value={status.id} className="mt-12">
-              <div className="grid gap-x-12 gap-y-16 md:grid-cols-2">
+              {/* A coluna da direita desce um pouco: as duas param de marchar juntas. */}
+              <div className="grid gap-x-12 gap-y-16 md:grid-cols-2 md:gap-x-16">
                 {EMPREENDIMENTOS[status.id].map((item, i) => (
-                  <Reveal key={item.id} delay={(i % 2) * 0.08}>
+                  <Reveal
+                    key={item.id}
+                    delay={(i % 2) * 0.08}
+                    className={i % 2 === 1 ? 'md:mt-24' : undefined}
+                  >
                     <Card item={item} />
                   </Reveal>
                 ))}
