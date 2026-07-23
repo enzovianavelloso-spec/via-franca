@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brand — amostrados da logo e do material oficial Via França */
+    --brand-red: 358 72% 41%; /* #B31D22 */
+    --brand-navy: 242 33% 31%; /* #38366A */
+    --ink: 215 100% 6%; /* #000C1D */
+    --paper: 0 0% 98%; /* #FAFAFA */
+    --neutral: 220 9% 46%; /* #6B7280 */
+
+    /* Papéis semânticos (compatível com shadcn/ui) */
+    --background: 0 0% 100%;
+    --foreground: var(--ink);
+    --primary: var(--brand-red);
+    --primary-foreground: 0 0% 100%;
+    --secondary: var(--paper);
+    --secondary-foreground: var(--ink);
+    --muted: var(--paper);
+    --muted-foreground: var(--neutral);
+    --accent: var(--brand-navy);
+    --accent-foreground: 0 0% 100%;
+    --border: 220 14% 90%;
+    --input: 220 14% 90%;
+    --ring: var(--brand-red);
+
+    --radius: 0.25rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* espaço para o cabeçalho fixo ao pular por âncora */
+    scroll-padding-top: 6.5rem;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--brand-red));
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: hsl(var(--brand-red));
+    color: #fff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  /* Números e dados: figuras alinhadas em coluna */
+  .vf-figures {
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+}
