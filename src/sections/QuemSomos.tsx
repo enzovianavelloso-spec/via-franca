@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { Eyebrow } from '@/components/Eyebrow'
 import { Reveal } from '@/components/Reveal'
+import { useTiltFoto } from '@/hooks/useTiltFoto'
 import quemSomosLago from '@/assets/quem-somos-lago.jpg'
 
 export function QuemSomos() {
@@ -13,6 +14,7 @@ export function QuemSomos() {
     offset: ['start end', 'end start'],
   })
   const deriva = useTransform(scrollYProgress, [0, 1], ['-6%', '6%'])
+  const tilt = useTiltFoto(10)
 
   return (
     <section id="quem-somos" className="scroll-mt-24 pb-24 pt-16 md:pb-32 md:pt-20">
@@ -46,15 +48,21 @@ export function QuemSomos() {
 
         <Reveal delay={0.15} className="lg:pt-4">
           <figure>
-            <div ref={quadro} className="relative aspect-[4/5] overflow-hidden bg-paper">
+            <div
+              ref={quadro}
+              className="relative aspect-[4/5] overflow-hidden bg-paper"
+              onMouseMove={tilt.onMouseMove}
+              onMouseLeave={tilt.onMouseLeave}
+            >
               <motion.div
                 className="absolute inset-x-0 top-[-7%] h-[114%]"
                 style={reduceMotion ? undefined : { y: deriva }}
               >
-                <img
+                <motion.img
                   src={quemSomosLago}
                   alt="Lago cercado por palmeiras e gramado em área rural da Via França."
                   className="size-full object-cover"
+                  style={reduceMotion ? undefined : { x: tilt.x, y: tilt.y }}
                   loading="lazy"
                 />
               </motion.div>

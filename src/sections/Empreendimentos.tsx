@@ -3,6 +3,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { Eyebrow } from '@/components/Eyebrow'
 import { Reveal } from '@/components/Reveal'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useTiltFoto } from '@/hooks/useTiltFoto'
 import { EMPREENDIMENTOS, STATUS, type Empreendimento } from '@/data/empreendimentos'
 
 function LinhaDeDado({ rotulo, valor }: { rotulo: string; valor: string }) {
@@ -36,17 +37,27 @@ function Card({ item }: { item: Empreendimento }) {
   })
   const deriva = useTransform(scrollYProgress, [0, 1], ['-5%', '5%'])
 
+  // Camada separada: o scroll desloca em %, o mouse desloca em px — não dá
+  // para acumular os dois no mesmo eixo `y` do Framer Motion.
+  const tilt = useTiltFoto(8)
+
   return (
     <article className="group flex flex-col">
-      <div ref={quadro} className="relative aspect-[3/2] overflow-hidden bg-paper">
+      <div
+        ref={quadro}
+        className="relative aspect-[3/2] overflow-hidden bg-paper"
+        onMouseMove={tilt.onMouseMove}
+        onMouseLeave={tilt.onMouseLeave}
+      >
         <motion.div
           className="absolute inset-x-0 top-[-6%] h-[112%]"
           style={reduceMotion ? undefined : { y: deriva }}
         >
-          <img
+          <motion.img
             src={item.imagem}
             alt={item.alt}
             className="size-full object-cover transition-transform ease-out [transition-duration:900ms] will-change-transform group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+            style={reduceMotion ? undefined : { x: tilt.x, y: tilt.y }}
             loading="lazy"
           />
         </motion.div>
