@@ -3,7 +3,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { Eyebrow } from '@/components/Eyebrow'
 import { Reveal } from '@/components/Reveal'
 import { useTiltFoto } from '@/hooks/useTiltFoto'
-import quemSomosLago from '@/assets/quem-somos-lago.jpg'
+import quemSomosLago from '@/assets/quem-somos-lago.webp'
 
 export function QuemSomos() {
   const quadro = useRef<HTMLDivElement>(null)

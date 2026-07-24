@@ -71,3 +71,7 @@
     font-variant-numeric: lining-nums tabular-nums;
   }
 }
+
+#lovable-badge {
+  display: none !important;
+}

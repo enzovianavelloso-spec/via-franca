@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { Eyebrow } from '@/components/Eyebrow'
-import heroTorre from '@/assets/hero-torre.jpg'
+import heroTorre from '@/assets/hero-torre.webp'
 
 const FATOS = ['Montes Claros / MG', 'Atuação em MG · SP · BA', 'Mais de 16 anos de mercado']
 
