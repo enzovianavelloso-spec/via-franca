@@ -8,6 +8,7 @@ import fazendaParaisoFuturo from '@/assets/fazenda-paraiso-futuro.webp'
 import arandu from '@/assets/arandu-real.webp'
 import loteamentoSaoPaulo from '@/assets/loteamento-sao-paulo.webp'
 import condominioFranciscoSa from '@/assets/condominio-francisco-sa.webp'
+import condominioLagosBetim from '@/assets/condominio-lagos-betim.webp'
 
 export type StatusId = 'entregues' | 'execucao' | 'futuros'
 
@@ -220,6 +221,21 @@ export const EMPREENDIMENTOS: Record<StatusId, Empreendimento[]> = {
       imagem: condominioFranciscoSa,
       alt: 'Vista aérea da malha urbana de Francisco Sá, em Minas Gerais.',
       nota: 'Imagem ilustrativa — fonte: Pinterest.',
+    },
+    {
+      id: 'condominio-02-lagos',
+      nome: 'Condomínio 02 Lagos',
+      tipo: 'Condomínio',
+      local: 'Betim/MG',
+      areaTotal: A_DEFINIR,
+      unidades: A_DEFINIR,
+      areaUnidade: A_DEFINIR,
+      prazoRotulo: 'Previsão',
+      prazo: A_DEFINIR,
+      descricao: 'Condomínio fechado de lotes, próximo aos bairros Marimbá, Califórnia e Santo Afonso.',
+      imagem: condominioLagosBetim,
+      alt: 'Masterplan aéreo do Condomínio 02 Lagos, em Betim, com malha viária radial e duas lagoas centrais.',
+      nota: 'Imagem ilustrativa — render do masterplan.',
     },
   ],
 }
