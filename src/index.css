@@ -218,6 +218,11 @@
   }
 }
 
+/* Esconde o badge "Made with Lovable" injetado no preview/publicação. */
+#lovable-badge {
+  display: none !important;
+}
+
 /* Interruptor global. Cada componente ainda trata reduced-motion no seu próprio
    código retornando markup estático — este bloco é a segunda rede, para o que
    for animado só por CSS. */
