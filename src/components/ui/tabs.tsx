@@ -23,10 +23,12 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      'group relative pb-3 font-sans text-[0.6875rem] font-medium uppercase tracking-[0.16em] text-neutral transition-colors sm:text-[0.75rem] sm:tracking-[0.18em]',
+      /* min-h-11 garante o piso de 44px de alvo de toque sem inflar o texto. */
+      'group relative flex min-h-11 items-end pb-3 font-sans text-[0.6875rem] font-medium uppercase tracking-[0.16em] text-neutral transition-colors sm:text-[0.75rem] sm:tracking-[0.18em]',
       'hover:text-ink data-[state=active]:text-ink',
-      'after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:scale-x-0 after:bg-brand-red after:transition-transform after:duration-300 after:content-[""]',
-      'data-[state=active]:after:scale-x-100',
+      'after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-right after:scale-x-0 after:bg-brand-red after:transition-transform after:duration-500 after:ease-fluid after:content-[""]',
+      'hover:after:origin-left hover:after:scale-x-100',
+      'data-[state=active]:after:origin-left data-[state=active]:after:scale-x-100',
       className,
     )}
     {...props}

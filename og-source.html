@@ -1,0 +1,81 @@
+<!doctype html>
+<!--
+  Fonte da imagem de compartilhamento. Renderizada uma vez em 1200×630 e salva
+  em public/og.png; este arquivo não é publicado e não entra no build.
+  Para regerar: subir o dev server e fotografar /og-source.html em 1200×630.
+-->
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..500,0..100,0..1&family=Work+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: #faf8f5;
+        position: relative;
+        font-family: 'Work Sans', system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .grain {
+        position: absolute; inset: 0; opacity: 0.035; mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+      .marca { position: absolute; right: -240px; bottom: -40px; width: 1180px; opacity: 0.13; }
+      .conteudo { position: relative; padding: 84px 96px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+      .lockup svg { width: 300px; display: block; }
+      .nome {
+        margin-top: 14px; font-family: 'Fraunces', Georgia, serif; font-weight: 400;
+        font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 1;
+        font-size: 44px; letter-spacing: 0.01em; color: #000c1d; line-height: 1;
+      }
+      .sub { margin-top: 12px; font-size: 15px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.32em; color: #5c6672; }
+      h1 {
+        font-family: 'Fraunces', Georgia, serif; font-weight: 300;
+        font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 1;
+        font-size: 74px; line-height: 0.98; letter-spacing: -0.025em; color: #000c1d; max-width: 17ch;
+      }
+      h1 em { font-style: normal; color: #b31d22; }
+      .fatos { display: flex; gap: 40px; border-top: 1px solid rgba(0, 12, 29, 0.15); padding-top: 22px; margin-top: 34px; }
+      .fatos li { list-style: none; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.2em; color: #5c6672; }
+    </style>
+  </head>
+  <body>
+    <svg class="marca" viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M 22 132 Q 330 34.4 590 58 Q 330 59.6 22 132 Z" fill="#B31D22" />
+      <path d="M 112 133 Q 330 55.2 528 66 Q 330 74.8 112 133 Z" fill="#38366A" />
+      <path d="M 228 50 Q 376 24 524 40 Q 376 38 228 50 Z" fill="#38366A" />
+      <path d="M 216 120 Q 370 63.6 522 78 Q 370 80.4 216 120 Z" fill="#B31D22" />
+    </svg>
+    <div class="grain"></div>
+
+    <div class="conteudo">
+      <div class="lockup">
+        <svg viewBox="0 16 600 126" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M 22 132 Q 330 34.4 590 58 Q 330 59.6 22 132 Z" fill="#B31D22" />
+          <path d="M 112 133 Q 330 55.2 528 66 Q 330 74.8 112 133 Z" fill="#38366A" />
+          <path d="M 228 50 Q 376 24 524 40 Q 376 38 228 50 Z" fill="#38366A" />
+          <path d="M 216 120 Q 370 63.6 522 78 Q 370 80.4 216 120 Z" fill="#B31D22" />
+        </svg>
+        <div class="nome">Via França</div>
+        <div class="sub">Empreendimentos</div>
+      </div>
+
+      <div>
+        <h1>Transformando suas ideias em empreendimentos <em>únicos.</em></h1>
+        <ul class="fatos">
+          <li>Montes Claros / MG</li>
+          <li>MG · SP · BA</li>
+          <li>+16 anos de mercado</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

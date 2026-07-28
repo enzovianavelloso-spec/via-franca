@@ -1,34 +1,38 @@
 import { useRef } from 'react'
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
-import { Eyebrow } from '@/components/Eyebrow'
-import { Reveal } from '@/components/Reveal'
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
+import { Section } from '@/components/Section'
+import { SectionHead } from '@/components/SectionHead'
+import { Reveal } from '@/components/motion/Reveal'
 import { useTiltFoto } from '@/hooks/useTiltFoto'
+import { HOVER_SPRING, SCROLL_SPRING } from '@/lib/motion'
 import quemSomosLago from '@/assets/quem-somos-lago.webp'
 
 export function QuemSomos() {
   const quadro = useRef<HTMLDivElement>(null)
   const reduceMotion = useReducedMotion()
 
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress: progressoBruto } = useScroll({
     target: quadro,
     offset: ['start end', 'end start'],
   })
+  // Molado: sem isto, uma mudança de altura do documento (troca de fonte
+  // async, por exemplo) faz o progresso pular em vez de deslizar.
+  const scrollYProgress = useSpring(progressoBruto, SCROLL_SPRING)
+  // Deriva de scroll em `%`, tilt de ponteiro em `px`: as duas unidades não se
+  // anulam porque vivem em elementos diferentes.
   const deriva = useTransform(scrollYProgress, [0, 1], ['-6%', '6%'])
   const tilt = useTiltFoto(10)
 
   return (
-    <section id="quem-somos" className="scroll-mt-24 pb-24 pt-16 md:pb-32 md:pt-20">
-      <div className="container grid items-start gap-x-16 gap-y-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
+    <Section id="quem-somos">
+      <div className="grid items-start gap-x-16 gap-y-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
         <div>
-          <Reveal>
-            <Eyebrow>Quem somos</Eyebrow>
-            <h2 className="mt-6 font-display text-[clamp(2.25rem,5vw,3.75rem)] font-light leading-[1.02] tracking-[-0.02em] text-ink">
-              Via França
-            </h2>
-            <p className="mt-4 font-display text-[clamp(1.125rem,2vw,1.5rem)] font-normal italic text-brand-red">
-              Empreendimentos, incorporações, compra e venda.
-            </p>
-          </Reveal>
+          <SectionHead
+            eyebrow="Quem somos"
+            titulo="Via França"
+            lede="Empreendimentos, incorporações, compra e venda."
+            ledeClassName="text-brand-red"
+          />
 
           <Reveal delay={0.1}>
             <div className="mt-9 max-w-measure space-y-6 text-ink/75">
@@ -46,13 +50,15 @@ export function QuemSomos() {
           </Reveal>
         </div>
 
-        <Reveal delay={0.15} className="lg:pt-4">
+        <Reveal delay={0.15} scale className="lg:pt-4">
           <figure>
-            <div
+            <motion.div
               ref={quadro}
-              className="relative aspect-[4/5] overflow-hidden bg-paper"
+              className="blade-marks group relative aspect-[4/5] overflow-hidden rounded-2xl bg-surface shadow-lift"
               onMouseMove={tilt.onMouseMove}
               onMouseLeave={tilt.onMouseLeave}
+              whileHover={reduceMotion ? undefined : { y: -6 }}
+              transition={HOVER_SPRING}
             >
               <motion.div
                 className="absolute inset-x-0 top-[-7%] h-[114%]"
@@ -61,18 +67,26 @@ export function QuemSomos() {
                 <motion.img
                   src={quemSomosLago}
                   alt="Lago cercado por palmeiras e gramado em área rural da Via França."
-                  className="size-full object-cover"
+                  width={1200}
+                  height={1500}
+                  className="size-full object-cover transition-transform ease-fluid [transition-duration:1100ms] group-hover:scale-[1.06]"
                   style={reduceMotion ? undefined : { x: tilt.x, y: tilt.y }}
                   loading="lazy"
                 />
               </motion.div>
-            </div>
-            <figcaption className="mt-3 font-sans text-[0.6875rem] uppercase tracking-[0.16em] text-neutral">
+              {/* Véu de base: unifica a foto com o papel e evita que o canto
+                  inferior brigue com a marca de canto. */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(0,12,29,0.28),rgba(0,12,29,0.04)_46%,transparent_72%)]"
+              />
+            </motion.div>
+            <figcaption className="type-label mt-3">
               Loteamentos e condomínios rurais e residenciais
             </figcaption>
           </figure>
         </Reveal>
       </div>
-    </section>
+    </Section>
   )
 }

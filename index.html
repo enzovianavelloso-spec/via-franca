@@ -17,16 +17,27 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fraunces com os eixos SOFT e WONK: a mesma família serve de display
+         (WONK 1), de figura numérica (WONK 0 + tnum) e de lede itálico
+         (SOFT 40). Sem os eixos, a variável estava sendo usada como estática. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Work+Sans:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..500,0..100,0..1&family=Work+Sans:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
     <meta property="og:title" content="Via França Empreendimentos — Loteamentos, condomínios e incorporação">
   <meta name="twitter:title" content="Via França Empreendimentos — Loteamentos, condomínios e incorporação">
   <meta property="og:description" content="Holding imobiliária de Montes Claros/MG com mais de 16 anos de mercado. Loteamentos e condomínios rurais e residenciais em Minas Gerais, São Paulo e Bahia.">
   <meta name="twitter:description" content="Holding imobiliária de Montes Claros/MG com mais de 16 anos de mercado. Loteamentos e condomínios rurais e residenciais em Minas Gerais, São Paulo e Bahia.">
-  <meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9c7acb80-d15a-464e-ab1c-3199ea5398cc/id-preview-41ec326e--a25a0eb8-9c06-429c-a712-65840869d798.lovable.app-1784776656004.png">
-  <meta name="twitter:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9c7acb80-d15a-464e-ab1c-3199ea5398cc/id-preview-41ec326e--a25a0eb8-9c06-429c-a712-65840869d798.lovable.app-1784776656004.png">
+  <!-- Cartão de compartilhamento próprio, gerado de og-source.html. Antes daqui
+       apontava para um screenshot do preview no bucket do Lovable, que
+       congelaria o design antigo. TROCAR POR URL ABSOLUTA quando o domínio
+       definitivo estiver definido: alguns raspadores não resolvem caminho
+       relativo. -->
+  <meta property="og:image" content="/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Via França Empreendimentos — Transformando suas ideias em empreendimentos únicos.">
+  <meta name="twitter:image" content="/og.png">
   <meta name="twitter:card" content="summary_large_image">
 </head>
   <body>

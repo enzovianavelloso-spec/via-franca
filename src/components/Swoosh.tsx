@@ -1,12 +1,12 @@
 import { cn } from '@/lib/utils'
 
 /**
- * As quatro lâminas curvas da logo Via França, traçadas a partir da marca oficial.
- * Cada lâmina é um par de curvas quadráticas entre os mesmos dois pontos — o que
- * produz a ponta afilada nas duas extremidades e o corpo mais cheio no meio.
- * Sistema de coordenadas base: 600 × 160.
+ * As quatro lâminas curvas da logo Via França, traçadas a partir da marca
+ * oficial. Cada lâmina é um par de curvas quadráticas entre os mesmos dois
+ * pontos — o que produz a ponta afilada nas duas extremidades e o corpo mais
+ * cheio no meio. Sistema de coordenadas base: 600 × 160.
  */
-type Blade = {
+export type Blade = {
   from: [number, number]
   to: [number, number]
   top: [number, number]
@@ -14,14 +14,30 @@ type Blade = {
   tone: 'red' | 'navy'
 }
 
-const BLADES: Blade[] = [
+export const BLADES: Blade[] = [
   { from: [22, 132], to: [590, 58], top: [330, 38], bottom: [330, 56], tone: 'red' },
   { from: [112, 133], to: [528, 66], top: [330, 58], bottom: [330, 72], tone: 'navy' },
   { from: [228, 50], to: [524, 40], top: [376, 26], bottom: [376, 36], tone: 'navy' },
   { from: [216, 120], to: [522, 78], top: [370, 66], bottom: [370, 78], tone: 'red' },
 ]
 
-function bladePath({ from, to, top, bottom }: Blade) {
+/**
+ * Afasta as duas curvas de controle em torno do eixo da lâmina. É o que dá
+ * corpo à marca em tamanho pequeno: o desenho oficial tem lâminas de ~18
+ * unidades numa grade de 160, e reduzido a 116px de largura ele vira fio.
+ * Aumentar a largura sem isto só deixa o fio mais comprido.
+ */
+export function engrossar(blade: Blade, espessura: number): Blade {
+  if (espessura === 1) return blade
+  const eixo = (blade.top[1] + blade.bottom[1]) / 2
+  return {
+    ...blade,
+    top: [blade.top[0], eixo + (blade.top[1] - eixo) * espessura],
+    bottom: [blade.bottom[0], eixo + (blade.bottom[1] - eixo) * espessura],
+  }
+}
+
+export function bladePath({ from, to, top, bottom }: Blade) {
   return `M ${from[0]} ${from[1]} Q ${top[0]} ${top[1]} ${to[0]} ${to[1]} Q ${bottom[0]} ${bottom[1]} ${from[0]} ${from[1]} Z`
 }
 
@@ -33,6 +49,8 @@ type SwooshProps = {
   trimTop?: number
   /** Corta o espaço vazio abaixo das lâminas. */
   trimBottom?: number
+  /** Multiplicador de corpo das lâminas. 1 = desenho oficial. */
+  espessura?: number
   /** Usa currentColor nas quatro lâminas, em vez do vermelho + azul da marca. */
   mono?: boolean
 }
@@ -42,6 +60,7 @@ export function Swoosh({
   stretch = 1,
   trimTop = 0,
   trimBottom = 0,
+  espessura = 1,
   mono = false,
 }: SwooshProps) {
   const width = 600 * stretch
@@ -59,7 +78,7 @@ export function Swoosh({
         {BLADES.map((blade, i) => (
           <path
             key={i}
-            d={bladePath(blade)}
+            d={bladePath(engrossar(blade, espessura))}
             fill={mono ? 'currentColor' : `hsl(var(--brand-${blade.tone}))`}
           />
         ))}

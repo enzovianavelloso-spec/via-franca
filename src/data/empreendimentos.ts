@@ -7,9 +7,20 @@ import fazendaParaiso from '@/assets/fazenda-paraiso.webp'
 import arandu from '@/assets/arandu.webp'
 import loteamentoSaoPaulo from '@/assets/loteamento-sao-paulo.webp'
 import condominioFranciscoSa from '@/assets/condominio-francisco-sa.webp'
-import romagnholloRios from '@/assets/romagnhollo-rios.webp'
 
 export type StatusId = 'entregues' | 'execucao' | 'futuros'
+
+/**
+ * Empreendimento entregue por etapas. Quando presente, a ficha do card troca a
+ * linha única de unidades por uma linha por etapa, cada uma com sua situação —
+ * é a única forma de mostrar que parte do projeto já foi entregue sem duplicá-lo
+ * na aba Entregues e inflar a contagem do portfólio.
+ */
+export type Fase = {
+  rotulo: string
+  situacao: 'entregue' | 'execucao'
+  unidades: string
+}
 
 export type Empreendimento = {
   id: string
@@ -27,6 +38,8 @@ export type Empreendimento = {
   alt: string
   /** Ressalva editorial exibida como nota de rodapé do card. */
   nota?: string
+  /** Etapas do projeto. Substitui a linha `unidades` quando definida. */
+  fases?: Fase[]
 }
 
 export const STATUS: { id: StatusId; rotulo: string }[] = [
@@ -121,14 +134,19 @@ export const EMPREENDIMENTOS: Record<StatusId, Empreendimento[]> = {
       tipo: 'Condomínio Rural',
       local: 'Juquiá/SP',
       areaTotal: '+8.000.000 m²',
-      unidades: '336 lotes',
+      unidades: '423 lotes',
       areaUnidade: '+2.000 m²',
-      prazoRotulo: 'Previsão',
-      prazo: '1ª fase entregue meados de 2024',
+      prazoRotulo: 'Previsão da 2ª fase',
+      prazo: A_DEFINIR,
       descricao:
-        'Condomínio de chácara para público de classe média alta de São Paulo. Serão 258 chácaras totais, divididas em duas etapas, sendo a primeira já em comercialização, com 78 chácaras.',
+        'Condomínio de chácara para público de classe média alta de São Paulo, dividido em duas etapas. A primeira já foi entregue, com 87 lotes; a segunda fase, de 336 lotes, está em execução.',
       imagem: fazendaParaiso,
       alt: 'Vista aérea de extensa área de coqueiros e vegetação nativa da Fazenda Paraíso.',
+      fases: [
+        { rotulo: '1ª etapa', situacao: 'entregue', unidades: '87 lotes' },
+        { rotulo: '2ª fase', situacao: 'execucao', unidades: '336 lotes' },
+      ],
+      nota: 'Números das etapas conforme atualização do cliente — total a confirmar.',
     },
   ],
   futuros: [
@@ -178,29 +196,56 @@ export const EMPREENDIMENTOS: Record<StatusId, Empreendimento[]> = {
       alt: 'Vista aérea da malha urbana de Francisco Sá, em Minas Gerais.',
       nota: 'Imagem ilustrativa — fonte: Pinterest.',
     },
-    {
-      id: 'romagnhollo-rios',
-      nome: 'Condomínio Romagnhollo Rios',
-      tipo: 'Condomínio fechado',
-      local: 'Araxá/MG',
-      areaTotal: '+65.000 m²',
-      unidades: A_DEFINIR,
-      areaUnidade: A_DEFINIR,
-      prazoRotulo: 'Previsão',
-      prazo: A_DEFINIR,
-      descricao: 'Condomínio fechado de lotes.',
-      imagem: romagnholloRios,
-      alt: 'Vista aérea da cidade de Araxá, em Minas Gerais.',
-      nota: 'Imagem ilustrativa.',
-    },
   ],
 }
 
+/** Sigla do estado extraída do campo `local` — sempre o trecho após a última barra. */
+function uf(local: string) {
+  return local.slice(local.lastIndexOf('/') + 1).trim()
+}
+
+/**
+ * Atuação por estado, derivada do portfólio em tempo de render. Contagens e
+ * cidades nunca são escritas à mão: remover ou acrescentar um empreendimento
+ * acima já atualiza a seção Atuação sozinho.
+ */
+export const ATUACAO = (() => {
+  const porUf = new Map<string, { total: number; cidades: string[] }>()
+
+  for (const lista of Object.values(EMPREENDIMENTOS)) {
+    for (const emp of lista) {
+      const sigla = uf(emp.local)
+      const entrada = porUf.get(sigla) ?? { total: 0, cidades: [] }
+      entrada.total += 1
+      // `local` pode listar vários distritos ("São Paulo Capital, Guarapiranga,
+      // Parelheiros/SP"); para a Atuação basta o primeiro.
+      const cidade = emp.local.slice(0, emp.local.lastIndexOf('/')).split(',')[0].trim()
+      if (cidade && !entrada.cidades.includes(cidade)) entrada.cidades.push(cidade)
+      porUf.set(sigla, entrada)
+    }
+  }
+
+  return [...porUf.entries()]
+    .map(([sigla, { total, cidades }]) => ({ sigla, total, cidades }))
+    .sort((a, b) => b.total - a.total)
+})()
+
+/** Total de empreendimentos no portfólio, somando as três abas. */
+export const TOTAL_EMPREENDIMENTOS = Object.values(EMPREENDIMENTOS).reduce(
+  (soma, lista) => soma + lista.length,
+  0,
+)
+
+/**
+ * Os quatro números do briefing. Guardados como valor numérico — e não como
+ * string pré-formatada — para que a figura possa ser contada em tela e a régua
+ * embaixo dela encher no mesmo motion value.
+ */
 export const NUMEROS = [
-  { figura: '+500', complemento: 'milhões', rotulo: 'de VGV' },
-  { figura: '+1.500', complemento: '', rotulo: 'unidades imobiliárias' },
-  { figura: '+9', complemento: 'milhões', rotulo: 'de m²' },
-  { figura: '+16', complemento: '', rotulo: 'anos de mercado' },
+  { valor: 500, milhar: false, complemento: 'milhões', rotulo: 'de VGV' },
+  { valor: 1500, milhar: true, complemento: '', rotulo: 'unidades imobiliárias' },
+  { valor: 9, milhar: false, complemento: 'milhões', rotulo: 'de m²' },
+  { valor: 16, milhar: false, complemento: '', rotulo: 'anos de mercado' },
 ]
 
 export const CONTATO = {

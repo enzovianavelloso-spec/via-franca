@@ -4,29 +4,49 @@
 
 @layer base {
   :root {
-    /* Brand — amostrados da logo e do material oficial Via França */
+    /* Marca — amostrados da logo e do material oficial Via França */
     --brand-red: 358 72% 41%; /* #B31D22 */
     --brand-navy: 242 33% 31%; /* #38366A */
     --ink: 215 100% 6%; /* #000C1D */
-    --paper: 0 0% 98%; /* #FAFAFA */
-    --neutral: 220 9% 46%; /* #6B7280 */
+
+    /* Vermelho profundo: base das faixas cheias. É o mesmo vermelho da marca
+       levado ao fim da rampa, não uma cor nova. */
+    --brand-wine: 356 71% 28%; /* #7A1418 */
+    /* Vermelho clareado, único legível sobre a faixa vinho (5.5:1). */
+    --red-on-dark: 358 70% 61%; /* #E2555A */
+
+    /* Papel quente no lugar do branco frio. A profundidade da página vem da
+       diferença entre bone (fundo) e branco puro (cartão elevado) — não de
+       sombra escura, que não cabe numa direção clara. */
+    --paper: 36 30% 97%; /* #FAF8F5 */
+    --surface: 0 0% 100%;
+
+    /* #6B7280 dava 4.39:1 sobre bone e reprovava AA. Escurecido para 5.2:1. */
+    --neutral: 220 10% 40%; /* #5C6672 */
+
+    /* Dois fios: o quente separa sobre bone, o frio sobre cartão branco. */
+    --line-warm: 36 20% 88%;
+    --line-cool: 220 14% 90%;
 
     /* Papéis semânticos (compatível com shadcn/ui) */
-    --background: 0 0% 100%;
+    --background: var(--paper);
     --foreground: var(--ink);
     --primary: var(--brand-red);
     --primary-foreground: 0 0% 100%;
-    --secondary: var(--paper);
+    --secondary: var(--surface);
     --secondary-foreground: var(--ink);
     --muted: var(--paper);
     --muted-foreground: var(--neutral);
     --accent: var(--brand-navy);
     --accent-foreground: 0 0% 100%;
-    --border: 220 14% 90%;
-    --input: 220 14% 90%;
+    --border: var(--line-warm);
+    --input: var(--line-warm);
     --ring: var(--brand-red);
 
-    --radius: 0.25rem;
+    /* De 4px para 24px. Toda a escala de raio no tailwind.config deriva
+       daqui por calc() — subir o token arredonda cartão, botão, badge e
+       painel do nav de uma vez só. */
+    --radius: 24px;
   }
 
   * {
@@ -37,14 +57,23 @@
     scroll-behavior: smooth;
     /* espaço para o cabeçalho fixo ao pular por âncora */
     scroll-padding-top: 6.5rem;
+    /* Freio duplo com o body: o filete w-screen da Atuação e o inset-[-8%] da
+       foto do hero escapam do container de propósito. */
+    overflow-x: hidden;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-size: 1.0625rem;
+    font-size: 1.0625rem; /* 17px */
     line-height: 1.65;
     font-weight: 400;
+    overflow-x: hidden;
     text-rendering: optimizeLegibility;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
   }
 
   :focus-visible {
@@ -53,25 +82,155 @@
     border-radius: 2px;
   }
 
+  /* Sobre a faixa vinho o vermelho da marca some. Foco usa o clareado. */
+  .on-wine :focus-visible {
+    outline-color: hsl(var(--red-on-dark));
+  }
+
   ::selection {
     background: hsl(var(--brand-red));
     color: #fff;
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-  }
 }
 
 @layer components {
+  /* Fraunces variável. WONK no máximo dá as formas alternativas mais
+     idiossincráticas do desenho — em corpo grande lia como anguloso, não
+     como charmoso. Reduzido, e SOFT ligado, os terminais arredondam: menos
+     "quadrado", ainda com personalidade. */
+  .font-display {
+    font-variation-settings: 'opsz' 144, 'SOFT' 22, 'WONK' 0.3;
+  }
+
+  /* O H1 do hero é o único título grande e sozinho na tela — o resto do
+     sistema foi suavizado pra não repetir "quadrado" em título pequeno e
+     repetido, mas aqui, na única vez que a página é assim tão grande, ele
+     pode segurar mais caráter sem virar ruído. */
+  .type-hero {
+    @apply font-display;
+    font-variation-settings: 'opsz' 144, 'SOFT' 10, 'WONK' 0.6;
+  }
+
+  /* Números: WONK desligado, tnum trava a largura para o contador não tremer. */
+  .type-figure {
+    @apply font-display font-light;
+    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+    font-feature-settings: 'tnum' 1, 'lnum' 1;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+  }
+
+  /* A linha persuasiva de cada seção: itálico com terminais mais macios. */
+  .type-lede {
+    @apply font-display font-normal italic;
+    font-variation-settings: 'opsz' 24, 'SOFT' 40, 'WONK' 0;
+  }
+
+  .type-h2 {
+    @apply font-display font-light text-ink;
+    font-size: clamp(2.25rem, 1.4rem + 2.9vw, 3.75rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+  }
+
+  .on-wine .type-h2 {
+    @apply text-white;
+  }
+
+  .type-label {
+    @apply font-sans text-label font-medium uppercase text-neutral;
+  }
+
+  .on-wine .type-label {
+    color: rgb(255 255 255 / 0.72);
+  }
+
+  /* Marca de canto: dois cantos, nunca quatro — a assimetria é o que separa
+     isto de um frame decorativo. Vermelho em cima à esquerda, navy embaixo à
+     direita, ecoando o par de tons das lâminas da marca. */
+  .blade-marks {
+    position: relative;
+  }
+  .blade-marks::before,
+  .blade-marks::after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    width: 38px;
+    height: 38px;
+    pointer-events: none;
+    /* Sombra branca: a marca não some quando cai numa parte clara da foto. */
+    filter: drop-shadow(0 0 3px rgb(255 255 255 / 0.55));
+  }
+  .blade-marks::before {
+    top: 18px;
+    left: 18px;
+    border-top: 2px solid hsl(var(--brand-red));
+    border-left: 2px solid hsl(var(--brand-red));
+    border-top-left-radius: 12px;
+  }
+  .blade-marks::after {
+    bottom: 18px;
+    right: 18px;
+    border-bottom: 2px solid hsl(var(--brand-navy));
+    border-right: 2px solid hsl(var(--brand-navy));
+    border-bottom-right-radius: 12px;
+  }
+
+  /* Sobre a faixa vinho os dois tons da marca somem; a marca de canto vira
+     branca dos dois lados. */
+  .on-wine .blade-marks::before {
+    border-top-color: rgb(255 255 255 / 0.55);
+    border-left-color: rgb(255 255 255 / 0.55);
+  }
+  .on-wine .blade-marks::after {
+    border-bottom-color: rgb(255 255 255 / 0.55);
+    border-right-color: rgb(255 255 255 / 0.55);
+  }
+
+  /* Grão em feTurbulence inline: nenhuma requisição de rede. Sobre bone ele
+     aparece muito mais que sobre um fundo escuro — por isso a opacidade de uso
+     fica em 0.025–0.035 no claro e sobe só sobre a faixa vinho. */
+  .grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    mix-blend-mode: overlay;
+  }
+
+  .glass {
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+  }
+
   /* Números e dados: figuras alinhadas em coluna */
   .vf-figures {
     font-variant-numeric: lining-nums tabular-nums;
   }
 }
 
-#lovable-badge {
-  display: none !important;
+@layer utilities {
+  .section-pad {
+    padding-block: clamp(64px, 9vw, 124px);
+  }
+
+  .scroll-anchor {
+    scroll-margin-top: 92px;
+  }
+}
+
+/* Interruptor global. Cada componente ainda trata reduced-motion no seu próprio
+   código retornando markup estático — este bloco é a segunda rede, para o que
+   for animado só por CSS. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
