@@ -3,8 +3,9 @@ import reservaReal from '@/assets/reserva-real.webp'
 import condominiosDeCasas from '@/assets/condominios-de-casas.webp'
 import diamond from '@/assets/diamond.webp'
 import valeDosIpes from '@/assets/vale-dos-ipes.webp'
-import fazendaParaiso from '@/assets/fazenda-paraiso.webp'
-import arandu from '@/assets/arandu.webp'
+import fazendaParaisoEntregue from '@/assets/fazenda-paraiso-entregue.webp'
+import fazendaParaisoFuturo from '@/assets/fazenda-paraiso-futuro.webp'
+import arandu from '@/assets/arandu-real.webp'
 import loteamentoSaoPaulo from '@/assets/loteamento-sao-paulo.webp'
 import condominioFranciscoSa from '@/assets/condominio-francisco-sa.webp'
 
@@ -40,6 +41,11 @@ export type Empreendimento = {
   nota?: string
   /** Etapas do projeto. Substitui a linha `unidades` quando definida. */
   fases?: Fase[]
+  /**
+   * Quantos empreendimentos reais este card representa na contagem da Atuação
+   * (ex.: "Condomínios de Casas" agrupa 4 vilas em 1 card). Padrão: 1.
+   */
+  conta?: number
 }
 
 export const STATUS: { id: StatusId; rotulo: string }[] = [
@@ -96,6 +102,7 @@ export const EMPREENDIMENTOS: Record<StatusId, Empreendimento[]> = {
         'Foram vendidas 120 casas divididas em 4 empreendimentos: Vila Norte Mineira (28 casas), Vila dos Hibiscos (30 casas), Vila dos Girassóis (32 casas) e Vila dos Lagos (30 casas).',
       imagem: condominiosDeCasas,
       alt: 'Vista aérea de uma rua interna de condomínio de casas térreas em Montes Claros.',
+      conta: 4,
     },
     {
       id: 'diamond',
@@ -110,9 +117,13 @@ export const EMPREENDIMENTOS: Record<StatusId, Empreendimento[]> = {
       descricao: 'Condomínio de alto padrão em região nobre da cidade de Montes Claros.',
       imagem: diamond,
       alt: 'Portaria do condomínio Diamond, com pilares brancos e acobreados contra o céu azul.',
+      fases: [
+        { rotulo: '1ª fase', situacao: 'entregue', unidades: '37 lotes' },
+        { rotulo: '2ª fase', situacao: 'entregue', unidades: '37 lotes' },
+        { rotulo: '3ª fase', situacao: 'entregue', unidades: '36 lotes' },
+      ],
+      conta: 3,
     },
-  ],
-  execucao: [
     {
       id: 'vale-dos-ipes',
       nome: 'Vale dos Ipês',
@@ -121,7 +132,7 @@ export const EMPREENDIMENTOS: Record<StatusId, Empreendimento[]> = {
       areaTotal: '+36.000 m²',
       unidades: '87 lotes',
       areaUnidade: '+200 m²',
-      prazoRotulo: 'Previsão',
+      prazoRotulo: 'Entrega',
       prazo: 'out/2024',
       descricao:
         'Loteamento com foco em ser um bairro planejado próximo às faculdades na cidade de Montes Claros.',
@@ -129,27 +140,23 @@ export const EMPREENDIMENTOS: Record<StatusId, Empreendimento[]> = {
       alt: 'Imagem aérea de satélite do terreno do Vale dos Ipês, com o perímetro do loteamento demarcado.',
     },
     {
-      id: 'fazenda-paraiso',
-      nome: 'Fazenda Paraíso',
+      id: 'fazenda-paraiso-1a-fase',
+      nome: 'Fazenda Paraíso — 1ª fase',
       tipo: 'Condomínio Rural',
       local: 'Juquiá/SP',
       areaTotal: '+8.000.000 m²',
-      unidades: '423 lotes',
+      unidades: '87 lotes',
       areaUnidade: '+2.000 m²',
-      prazoRotulo: 'Previsão da 2ª fase',
+      prazoRotulo: 'Entrega',
       prazo: A_DEFINIR,
       descricao:
-        'Condomínio de chácara para público de classe média alta de São Paulo, dividido em duas etapas. A primeira já foi entregue, com 87 lotes; a segunda fase, de 336 lotes, está em execução.',
-      imagem: fazendaParaiso,
-      alt: 'Vista aérea de extensa área de coqueiros e vegetação nativa da Fazenda Paraíso.',
-      fases: [
-        { rotulo: '1ª etapa', situacao: 'entregue', unidades: '87 lotes' },
-        { rotulo: '2ª fase', situacao: 'execucao', unidades: '336 lotes' },
-      ],
-      nota: 'Números das etapas conforme atualização do cliente — total a confirmar.',
+        'Condomínio de chácara para público de classe média alta de São Paulo. Primeira fase entregue, com 87 lotes.',
+      imagem: fazendaParaisoEntregue,
+      alt: 'Piscina do condomínio Fazenda Paraíso, cercada de palmeiras imperiais e paisagismo tropical.',
+      nota: 'Números da etapa conforme atualização do cliente — total a confirmar.',
     },
   ],
-  futuros: [
+  execucao: [
     {
       id: 'arandu',
       nome: 'Arandu',
@@ -163,8 +170,26 @@ export const EMPREENDIMENTOS: Record<StatusId, Empreendimento[]> = {
       descricao:
         'O condomínio Arandu está localizado no vetor de crescimento da Costa do Descobrimento, próximo a vários condomínios de luxo, além de praias exclusivas e restaurantes premiados.',
       imagem: arandu,
-      alt: 'Praia deserta ao amanhecer na Costa do Descobrimento, sul da Bahia.',
+      alt: 'Vista aérea do condomínio Arandu, com extenso coqueiral e estrutura de apoio entre a vegetação.',
       nota: 'Denominação em atualização.',
+    },
+  ],
+  futuros: [
+    {
+      id: 'fazenda-paraiso-2a-fase',
+      nome: 'Fazenda Paraíso — 2ª fase',
+      tipo: 'Condomínio Rural',
+      local: 'Juquiá/SP',
+      areaTotal: '+8.000.000 m²',
+      unidades: '336 lotes',
+      areaUnidade: '+2.000 m²',
+      prazoRotulo: 'Previsão',
+      prazo: A_DEFINIR,
+      descricao:
+        'Segunda fase do condomínio de chácara Fazenda Paraíso, com 336 lotes, para público de classe média alta de São Paulo.',
+      imagem: fazendaParaisoFuturo,
+      alt: 'Pôr do sol visto de barco no rio que margeia a Fazenda Paraíso.',
+      nota: 'Números da etapa conforme atualização do cliente — total a confirmar.',
     },
     {
       id: 'loteamento-sao-paulo',
@@ -183,7 +208,7 @@ export const EMPREENDIMENTOS: Record<StatusId, Empreendimento[]> = {
     },
     {
       id: 'condominio-francisco-sa',
-      nome: 'Condomínio Francisco Sá',
+      nome: 'Parque dos Namorados',
       tipo: 'Condomínio',
       local: 'Francisco Sá/MG',
       areaTotal: '+33.000 m²',
@@ -216,7 +241,7 @@ export const ATUACAO = (() => {
     for (const emp of lista) {
       const sigla = uf(emp.local)
       const entrada = porUf.get(sigla) ?? { total: 0, cidades: [] }
-      entrada.total += 1
+      entrada.total += emp.conta ?? 1
       // `local` pode listar vários distritos ("São Paulo Capital, Guarapiranga,
       // Parelheiros/SP"); para a Atuação basta o primeiro.
       const cidade = emp.local.slice(0, emp.local.lastIndexOf('/')).split(',')[0].trim()
